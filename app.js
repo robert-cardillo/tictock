@@ -36,13 +36,19 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 
+app.get('/public*', function(req, res){
+    res.redirect(req.url.replace(/^\/public/,''));
+});
+
 server.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-io.set('authorization', function (handshakeData, calback) {
-    if (!handshakeData.headers.cookie)
-        return calback('No cookie transmitted.', false);
+io.set('authorization', function (handshakeData, callback) {
+    if (!handshakeData.headers.cookie){
+        callback('No cookie transmitted.', false);
+        return;
+    }
 
     var signedCookies = require('express/node_modules/cookie').parse(handshakeData.headers.cookie);
     handshakeData.cookies = require('express/node_modules/connect/lib/utils').parseSignedCookies(signedCookies, 'your_session_secret');
@@ -50,10 +56,10 @@ io.set('authorization', function (handshakeData, calback) {
     handshakeData.sessionStore = sessionStore;
     sessionStore.get(handshakeData.sessionID, function (err, session) {
         if (err || !session) {
-            calback('Error: No such session', false);
+            callback('Error: No such session', false);
         } else {
             handshakeData.session = session;
-            calback(null, true);
+            callback(null, true);
         }
     });
 });
