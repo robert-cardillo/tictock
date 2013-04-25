@@ -2,19 +2,19 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <!-- [css'] -->
+    <link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <link rel='stylesheet' href='/css/style.css'/>
+    <!-- [/css'] -->
 </head>
 <body>
 <h1><%= title %></h1>
-
 <p>Welcome to <%= title %></p>
+<!-- [scripts] -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script>
-    var socket = io.connect('http://localhost');
-    socket.on('news', function (data) {
-        console.log(data);
-        socket.emit('my other event', { my: 'data' });
-    });
-</script>
+<script src="/js/client.js"></script>
+<!-- [/scripts] -->
 </body>
 </html>
