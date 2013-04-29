@@ -1,13 +1,14 @@
 var game = (function (){
     var socket;
-    connect_socket();
 
     function connect_socket(){
-        socket = io.connect();  // TODO: socket server URI needed..
+        //  'force new connection': true enables socket.connect() after a socket.disconnect()
+        socket = io.connect(null,{'force new connection':true});  // TODO: socket server URI needed..
         socket_connecting();
 
         //  [socket hooks]
         socket.on('connect', function(){
+            console.log('connect event..');
             socket_connected();
         });
 
@@ -18,7 +19,15 @@ var game = (function (){
         socket.on('error', function(err){
             socket_error(err);
         });
+
+        socket.on('news', function(data){
+            console.log(data);
+        });
         //  [/socket hooks]
+    }
+
+    function disconnect_socket(){
+        socket.disconnect();
     }
 
     function socket_connecting(){
@@ -38,9 +47,14 @@ var game = (function (){
     }
 
     return {
-        publicVar: 73,
-        publicMethod: function(){
-            console.log(socket);
+        connect: function(){
+            connect_socket();
+        },
+        disconnect: function(){
+            disconnect_socket();
+        },
+        test: function(){
+            socket.emit('my other event', 'testing...');
         }
     };
 }());

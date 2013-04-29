@@ -65,9 +65,13 @@ io.set('authorization', function (handshakeData, callback) {
 });
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
     socket.on('my other event', function (data) {
+        //io.sockets.manager.rooms
+        //io.sockets.sockets.[socket.id]
         console.log(data);
     });
+
+    socket.join('game1');
+    io.sockets.in('game1').emit('news', { hello: 'world' });
 });
 
