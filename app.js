@@ -72,7 +72,6 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.join('game1');
-
     io.sockets.in('game1').emit('news', { hello: 'world' });
 });
 
