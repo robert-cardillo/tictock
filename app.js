@@ -27,7 +27,7 @@ app.use(express.session({
     secret: 'your_session_secret'
 }));
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
@@ -36,8 +36,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 
-app.get('/public*', function(req, res){
-    res.redirect(req.url.replace(/^\/public/,''));
+app.get('/debug', function(req, res){
+    res.send(JSON.stringify(io.sockets.manager.rooms));
 });
 
 server.listen(app.get('port'), function () {
