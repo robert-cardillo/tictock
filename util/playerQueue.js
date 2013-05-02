@@ -25,6 +25,9 @@ exports.createInstance = function(){
         getSize: function(){
             return queue.length;
         },
+        exists: function(player){
+            return find(player) !== -1;
+        },
         stringify: function(){
             return queue.toString();
         }

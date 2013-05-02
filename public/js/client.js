@@ -20,8 +20,8 @@ var game = (function (){
             socket_error(err);
         });
 
-        socket.on('news', function(data){
-            console.log(data);
+        socket.on('warning', function(data){
+            $('body').append('<p>'+data.message+'</p>');
         });
         //  [/socket hooks]
     }
@@ -53,8 +53,19 @@ var game = (function (){
         disconnect: function(){
             disconnect_socket();
         },
-        test: function(){
-            socket.emit('my other event', 'testing...');
+        findOppenent: function(){
+            socket.emit('findOpponent', null);
         }
     };
 }());
+
+$(function(){   //  alias for $(document).ready(function(){...})
+    //  actions
+    game.connect();
+
+    //  hooks
+    $('#findOpponentBtn').click(function(event){
+        game.findOppenent();
+        $('body').append('<p>Searching for an opponent, please wait...</p>');
+    })
+});

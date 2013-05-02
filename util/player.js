@@ -3,7 +3,11 @@ exports.createInstance = function(matchMaker, socketId, name, socket){
     var self;
 
     socket.on('findOpponent', function(){
-        matchMaker.enqueuePlayer(self);
+        if(matchMaker.isPlayerEnqueued(self)){
+            socket.emit('warning', {message:"You're already on the game queue!"});
+        }else{
+            matchMaker.enqueuePlayer(self);
+        }
     });
 
     //  public

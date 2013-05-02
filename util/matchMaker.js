@@ -5,9 +5,9 @@ exports.createInstance = function(io){
     //  private
     var self
       , playerQueue = require('./playerQueue.js').createInstance()
+      , playerList = {}
       , gameCount = 0
       , playerCount = 0
-      , active = false
       , isSocketValid = function(socketId){
             return io.sockets.sockets[socketId] && !io.sockets.sockets[socketId].disconnected;
         }
@@ -17,11 +17,7 @@ exports.createInstance = function(io){
               , p1IsValid
               , p2IsValid;
 
-            if(!active){
-                return;
-            }else{
-                process.nextTick(tryMatch);
-            }
+            process.nextTick(tryMatch);
 
             if(playerQueue.getSize() < 2){
                 return;
@@ -55,19 +51,17 @@ exports.createInstance = function(io){
     //  public
     self = {
         register: function(){
-            active = true;
             process.nextTick(tryMatch);
-        },
-        unregister: function(){
-            active = false;
         },
         addSocket: function(socket){
             playerCount++;
-            var player = require('./player.js').createInstance(this, socket.id, "player"+playerCount, socket);
-            this.enqueuePlayer(player);
+            playerList[socket.id] = require('./player.js').createInstance(this, socket.id, "player"+playerCount, socket);
         },
         enqueuePlayer: function(player){
             playerQueue.push(player);
+        },
+        isPlayerEnqueued: function(player){
+            return playerQueue.exists(player);
         },
         stringifyQueue: function(){
             return playerQueue.stringify();
