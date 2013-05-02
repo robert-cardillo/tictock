@@ -9,6 +9,7 @@ var express = require('express')
   , app = express()
   , server = http.createServer(app)
   , io = require('socket.io').listen(server)
+  , matchMaker = require('./util/matchMaker.js').createInstance(io)
   , sessionStore = new express.session.MemoryStore({reapInterval: 60000 * 10});
 
 // all environments
@@ -37,7 +38,9 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 
 app.get('/debug', function(req, res){
-    res.send(JSON.stringify(io.sockets.manager.rooms));
+    console.log('io.sockets.manager.rooms', io.sockets.manager.rooms);
+    res.write(matchMaker.stringifyQueue());
+    res.end();
 });
 
 server.listen(app.get('port'), function () {
@@ -64,14 +67,4 @@ io.set('authorization', function (handshakeData, callback) {
     });
 });
 
-io.sockets.on('connection', function (socket) {
-    socket.on('my other event', function (data) {
-        //io.sockets.manager.rooms
-        //io.sockets.sockets.[socket.id]
-        console.log(data);
-    });
-
-    socket.join('game1');
-    io.sockets.in('game1').emit('news', { hello: 'world' });
-});
-
+matchMaker.register();
