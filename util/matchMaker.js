@@ -34,10 +34,10 @@ exports.createInstance = function(io){
                 console.log('lift off! we have a lift off!');
             }else{
                 if(p1IsValid){
-                    playerQueue.push(player1);  //  TODO: push with priority..
+                    playerQueue.push(player1);  //  TODO: push with priority.. WONTDO: not necessary..
                 }
                 if(p2IsValid){
-                    playerQueue.push(player2);  //  TODO: push with priority..
+                    playerQueue.push(player2);  //  TODO: push with priority.. WONTDO: not necessary..
                 }
             }
         };
